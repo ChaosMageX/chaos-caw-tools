@@ -1,0 +1,9 @@
+2012-04-04:
+ChaosTools.Sims3Engine
+	*Initial release
+ChaosTools.GetShaders
+	*Initial release
+ChaosTools.EffectPlayer
+	*Initial release
+ChaosTools.AudioPlayer
+	*Initial release
