@@ -15,7 +15,11 @@ namespace ChaosTools.AudioPlayer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new AudioForm());
+#if DEBUG
             return ChaosTools.Sims3Engine.RenderForm.MainLoop(args, new AudioForm(), null);
+#else
+            return ChaosTools.Sims3Engine.RenderForm.MainLoopSafe(args, new AudioForm(), null);
+#endif
         }
     }
 }

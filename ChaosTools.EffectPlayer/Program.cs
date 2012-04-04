@@ -15,7 +15,11 @@ namespace ChaosTools.EffectPlayer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
+#if DEBUG
             return ChaosTools.Sims3Engine.RenderForm.MainLoop(args, new EffectForm(), null);
+#else
+            return ChaosTools.Sims3Engine.RenderForm.MainLoopSafe(args, new EffectForm(), null);
+#endif
         }
     }
 }
