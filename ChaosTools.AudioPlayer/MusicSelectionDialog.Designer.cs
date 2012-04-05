@@ -88,7 +88,7 @@
             this.songListView.Location = new System.Drawing.Point(15, 44);
             this.songListView.MultiSelect = false;
             this.songListView.Name = "songListView";
-            this.songListView.Size = new System.Drawing.Size(450, 180);
+            this.songListView.Size = new System.Drawing.Size(550, 180);
             this.songListView.TabIndex = 4;
             this.songListView.UseCompatibleStateImageBehavior = false;
             this.songListView.View = System.Windows.Forms.View.Details;
@@ -107,13 +107,13 @@
             // keyColumn
             // 
             this.keyColumn.Text = "AUDT";
-            this.keyColumn.Width = 50;
+            this.keyColumn.Width = 125;
             // 
             // okBTN
             // 
             this.okBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okBTN.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okBTN.Location = new System.Drawing.Point(360, 230);
+            this.okBTN.Location = new System.Drawing.Point(460, 230);
             this.okBTN.Name = "okBTN";
             this.okBTN.Size = new System.Drawing.Size(41, 23);
             this.okBTN.TabIndex = 5;
@@ -124,7 +124,7 @@
             // 
             this.cancelBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelBTN.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBTN.Location = new System.Drawing.Point(407, 230);
+            this.cancelBTN.Location = new System.Drawing.Point(507, 230);
             this.cancelBTN.Name = "cancelBTN";
             this.cancelBTN.Size = new System.Drawing.Size(58, 23);
             this.cancelBTN.TabIndex = 6;
@@ -135,7 +135,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 262);
+            this.ClientSize = new System.Drawing.Size(584, 262);
             this.Controls.Add(this.cancelBTN);
             this.Controls.Add(this.okBTN);
             this.Controls.Add(this.songListView);
@@ -143,7 +143,7 @@
             this.Controls.Add(this.genreLBL);
             this.Controls.Add(this.musicTypeCMB);
             this.Controls.Add(this.musicTypeLBL);
-            this.MinimumSize = new System.Drawing.Size(500, 300);
+            this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "MusicSelectionDialog";
             this.Text = "Select A Song";
             this.ResumeLayout(false);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AudioForm));
             this.startSoundBTN = new System.Windows.Forms.Button();
             this.stopSoundBTN = new System.Windows.Forms.Button();
@@ -43,6 +44,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectSongToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopReasonTXT = new System.Windows.Forms.TextBox();
+            this.feedbackTXT = new System.Windows.Forms.TextBox();
+            this.updateTimer = new System.Windows.Forms.Timer(this.components);
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showLoadTimesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.soundPropGRP.SuspendLayout();
             this.gameSpeedGRP.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -62,7 +68,7 @@
             // 
             this.stopSoundBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.stopSoundBTN.Enabled = false;
-            this.stopSoundBTN.Location = new System.Drawing.Point(497, 24);
+            this.stopSoundBTN.Location = new System.Drawing.Point(497, 27);
             this.stopSoundBTN.Name = "stopSoundBTN";
             this.stopSoundBTN.Size = new System.Drawing.Size(75, 23);
             this.stopSoundBTN.TabIndex = 1;
@@ -74,7 +80,7 @@
             // 
             this.soundNameTXT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.soundNameTXT.Location = new System.Drawing.Point(94, 27);
+            this.soundNameTXT.Location = new System.Drawing.Point(94, 29);
             this.soundNameTXT.Name = "soundNameTXT";
             this.soundNameTXT.Size = new System.Drawing.Size(397, 20);
             this.soundNameTXT.TabIndex = 2;
@@ -85,9 +91,9 @@
             this.soundPropGRP.Controls.Add(this.soundPropValueTXT);
             this.soundPropGRP.Controls.Add(this.setSoundPropBTN);
             this.soundPropGRP.Controls.Add(this.soundPropCMB);
-            this.soundPropGRP.Location = new System.Drawing.Point(219, 53);
+            this.soundPropGRP.Location = new System.Drawing.Point(219, 78);
             this.soundPropGRP.Name = "soundPropGRP";
-            this.soundPropGRP.Size = new System.Drawing.Size(353, 57);
+            this.soundPropGRP.Size = new System.Drawing.Size(353, 52);
             this.soundPropGRP.TabIndex = 3;
             this.soundPropGRP.TabStop = false;
             this.soundPropGRP.Text = "Sound Property";
@@ -124,7 +130,7 @@
             this.gameSpeedGRP.Controls.Add(this.speedMultiplierTxt);
             this.gameSpeedGRP.Controls.Add(this.playBtn);
             this.gameSpeedGRP.Controls.Add(this.pauseBtn);
-            this.gameSpeedGRP.Location = new System.Drawing.Point(13, 58);
+            this.gameSpeedGRP.Location = new System.Drawing.Point(13, 78);
             this.gameSpeedGRP.Name = "gameSpeedGRP";
             this.gameSpeedGRP.Size = new System.Drawing.Size(200, 52);
             this.gameSpeedGRP.TabIndex = 9;
@@ -164,7 +170,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.debugToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
@@ -182,15 +189,59 @@
             // selectSongToolStripMenuItem
             // 
             this.selectSongToolStripMenuItem.Name = "selectSongToolStripMenuItem";
-            this.selectSongToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.selectSongToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.selectSongToolStripMenuItem.Text = "Select Song";
             this.selectSongToolStripMenuItem.Click += new System.EventHandler(this.selectSong_Click);
+            // 
+            // stopReasonTXT
+            // 
+            this.stopReasonTXT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.stopReasonTXT.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.stopReasonTXT.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopReasonTXT.Location = new System.Drawing.Point(372, 59);
+            this.stopReasonTXT.Name = "stopReasonTXT";
+            this.stopReasonTXT.ReadOnly = true;
+            this.stopReasonTXT.Size = new System.Drawing.Size(200, 15);
+            this.stopReasonTXT.TabIndex = 11;
+            this.stopReasonTXT.Text = "Stop Reason:";
+            // 
+            // feedbackTXT
+            // 
+            this.feedbackTXT.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.feedbackTXT.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.feedbackTXT.Location = new System.Drawing.Point(12, 59);
+            this.feedbackTXT.Name = "feedbackTXT";
+            this.feedbackTXT.ReadOnly = true;
+            this.feedbackTXT.Size = new System.Drawing.Size(200, 15);
+            this.feedbackTXT.TabIndex = 12;
+            this.feedbackTXT.Text = "Sound Length:";
+            // 
+            // updateTimer
+            // 
+            this.updateTimer.Tick += new System.EventHandler(this.updateTimer_Tick);
+            // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showLoadTimesToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // showLoadTimesToolStripMenuItem
+            // 
+            this.showLoadTimesToolStripMenuItem.Name = "showLoadTimesToolStripMenuItem";
+            this.showLoadTimesToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.showLoadTimesToolStripMenuItem.Text = "Show Load Times";
+            this.showLoadTimesToolStripMenuItem.Click += new System.EventHandler(this.showLoadTimes_Click);
             // 
             // AudioForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 122);
+            this.ClientSize = new System.Drawing.Size(584, 142);
+            this.Controls.Add(this.feedbackTXT);
+            this.Controls.Add(this.stopReasonTXT);
             this.Controls.Add(this.gameSpeedGRP);
             this.Controls.Add(this.soundPropGRP);
             this.Controls.Add(this.soundNameTXT);
@@ -198,7 +249,7 @@
             this.Controls.Add(this.startSoundBTN);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(600, 160);
+            this.MinimumSize = new System.Drawing.Size(600, 180);
             this.Name = "AudioForm";
             this.Text = "Chaos Audio Player";
             this.soundPropGRP.ResumeLayout(false);
@@ -228,6 +279,11 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectSongToolStripMenuItem;
+        private System.Windows.Forms.TextBox stopReasonTXT;
+        private System.Windows.Forms.TextBox feedbackTXT;
+        private System.Windows.Forms.Timer updateTimer;
+        private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showLoadTimesToolStripMenuItem;
     }
 }
 

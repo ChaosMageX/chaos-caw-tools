@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using Sims3.SimIFace;
+using ChaosTools.Sims3Engine;
 
 namespace ChaosTools.AudioPlayer
 {
@@ -84,7 +85,7 @@ namespace ChaosTools.AudioPlayer
             List<TagValue<MusicTypeIndex>> results = new List<TagValue<MusicTypeIndex>>(6);
             for (int i = 0; i < 6; i++)
             {
-                results.Add(new TagValue<MusicTypeIndex>(GetLocalizedMusicType((MusicTypeIndex)i), (MusicTypeIndex)i));
+                results.Add(new TagValue<MusicTypeIndex>((MusicTypeIndex)i, GetLocalizedMusicType((MusicTypeIndex)i)));
             }
             return results;
         }
@@ -116,7 +117,7 @@ namespace ChaosTools.AudioPlayer
             }
             foreach (KeyValuePair<string, string> genre in sLocalizedGenres)
             {
-                results.Add(new TagValue<string>(genre.Value, genre.Key));
+                results.Add(new TagValue<string>(genre.Key, genre.Value));
             }
             return results;
         }
