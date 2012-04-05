@@ -106,16 +106,18 @@ namespace ChaosTools.AudioPlayer
             }
         }
 
-        private SoundWithHandle mCurrentSound = null;
-        //private DateTime mSoundStartTime;
-        private Queue<DateTime> mSoundStartTimes = new Queue<DateTime>(10);
-        /// <summary>
+        private System.Diagnostics.Stopwatch mSoundStopwatch 
+            = new System.Diagnostics.Stopwatch();
+        private uint mCurrentSound = 0;
+        /// <summary><para>
         /// Make sure that this delegate is not garbage collected until
         /// all sounds started with it have stopped,
+        /// </para><para>
         /// or else the game engine will throw exceptions
         /// when it tries to call the null/invalid delegate reference.
-        /// </summary>
+        /// </para></summary>
         private Sound.SoundFinished mSoundFinishedCallback;
+        private bool mbPlayOnCompletion = false;
 
         public AudioForm()
         {
@@ -131,36 +133,31 @@ namespace ChaosTools.AudioPlayer
                 }
             }
             this.soundPropCMB.SelectedItem = SoundProperty.Gain;
+            this.speedMultiplierTxt.Enabled = false;
             this.updateTimer.Start();
 #if !DEBUG
             this.pauseBtn.Enabled = false;
-            this.playBtn.Enabled = false;
 #endif
-            this.speedMultiplierTxt.Enabled = false;
         }
 
         protected override bool InitExtra()
         {
             this.mSoundFinishedCallback = new Sound.SoundFinished(this.OnSoundFinished);
             MusicData.Intialize();
-            //Audio.InitWorld();
+            Audio.InitWorld();
             return true;
         }
 
         private void StartSound()
         {
-            if (this.mCurrentSound == null)
+            if (this.mCurrentSound == 0)
             {
-                this.mCurrentSound = new SoundWithHandle(this.soundNameTXT.Text);
-                if (!this.mCurrentSound.Start(this.mSoundFinishedCallback))
+                this.mSoundFinishedCallback = new Sound.SoundFinished(this.OnSoundFinished);
+                this.mCurrentSound = Audio.StartSound(this.soundNameTXT.Text, this.mSoundFinishedCallback);
+                if (this.mCurrentSound != 0)
                 {
-                    this.mCurrentSound.Dispose();
-                    this.mCurrentSound = null;
-                }
-                else
-                {
-                    this.mSoundStartTimes.Enqueue(DateTime.Now);
-                    this.feedbackTXT.Text = "Sound Length: ";
+                    this.mSoundStopwatch.Reset();
+                    this.mSoundStopwatch.Start();
                     this.stopReasonTXT.Text = "Stop Reason: ";
                     this.startSoundBTN.Enabled = false;
                     this.stopSoundBTN.Enabled = true;
@@ -168,57 +165,73 @@ namespace ChaosTools.AudioPlayer
             }
         }
 
-        private void StopSound(uint soundHandle)
+        private void PauseSound(bool pause)
         {
-            if (this.mCurrentSound != null && 
-                this.mCurrentSound.IsPlaying() && 
-                this.mCurrentSound.Handle == soundHandle)
+            if (this.mCurrentSound != 0)
             {
-                this.mCurrentSound.Stop();
-                this.mCurrentSound.Dispose();
-                this.mCurrentSound = null;
+                if (pause && this.mSoundStopwatch.IsRunning) // Playing
+                {
+                    Audio.PauseGroup(this.mCurrentSound, true);
+                    Audio.PauseGroup((uint)AudioGroup.Sfx, true);
+                    Audio.PauseGroup((uint)AudioGroup.SfxNoPitch, true);
+                    Audio.PauseGroup((uint)AudioGroup.Ambience, true);
+                    Audio.PauseGroup((uint)AudioGroup.Vox, true);
+                    Audio.PauseGroup((uint)AudioGroup.GamePause, true);
+                    this.mSoundStopwatch.Stop();
+                }
+                else if (!pause && !this.mSoundStopwatch.IsRunning) // Paused
+                {
+                    Audio.PauseGroup(this.mCurrentSound, false);
+                    Audio.PauseGroup((uint)AudioGroup.Sfx, false);
+                    Audio.PauseGroup((uint)AudioGroup.SfxNoPitch, false);
+                    Audio.PauseGroup((uint)AudioGroup.Ambience, false);
+                    Audio.PauseGroup((uint)AudioGroup.Vox, false);
+                    Audio.PauseGroup((uint)AudioGroup.GamePause, false);
+                    this.mSoundStopwatch.Start();
+                }
+                this.feedbackTXT.Text = string.Concat("Sound Length: ", this.mSoundStopwatch.Elapsed.ToString());
+            }
+        }
 
-                this.startSoundBTN.Enabled = true;
-                this.stopSoundBTN.Enabled = false;
+        private void StopSound()
+        {
+            if (this.mCurrentSound != 0)
+            {
+                Audio.StopSound(this.mCurrentSound);
             }
         }
 
         private void OnSoundFinished(uint soundHandle, ulong objectId, uint stopReason)
         {
-            TimeSpan soundLength;
-            if (this.mSoundStartTimes.Count == 0)
-                soundLength = new TimeSpan();
-            else
-                soundLength = DateTime.Now - this.mSoundStartTimes.Dequeue();
-            // Give the timer a tick to realize that the sound times are empty.
-            //System.Threading.Thread.Sleep(100);
-            //MessageBox.Show(((SoundStopReason)stopReason).ToString(), "Sound Stopped");
-            this.stopReasonTXT.Text = string.Concat("Stop Reason: ", ((SoundStopReason)stopReason).ToString());
-            this.feedbackTXT.Text = string.Concat("Sound Length: ", soundLength.ToString());
-            // There could be another sound playing at this point,
-            // so "double-dipping" needs to be prevented.
-            this.StopSound(soundHandle);
+            if (this.mCurrentSound == soundHandle)
+            {
+                this.mSoundStopwatch.Stop();
+                this.stopReasonTXT.Text = string.Concat("Stop Reason: ", ((SoundStopReason)stopReason).ToString());
+                this.feedbackTXT.Text = string.Concat("Sound Length: ", this.mSoundStopwatch.Elapsed.ToString());
+                this.mCurrentSound = 0;
+                if (!this.soundNameTXT.Enabled)
+                {
+                    this.StartSound();
+                    this.soundNameTXT.Enabled = true;
+                }
+                else
+                {
+                    this.startSoundBTN.Enabled = true;
+                    this.stopSoundBTN.Enabled = false;
+                }
+            }
         }
 
         private void updateTimer_Tick(object sender, EventArgs e)
         {
-            if (this.mSoundStartTimes.Count > 0)
-            {
-                TimeSpan soundLength = DateTime.Now - this.mSoundStartTimes.Peek();
-                this.feedbackTXT.Text = string.Concat("Sound Length: ", soundLength.ToString());
-            }
+            if (this.mSoundStopwatch.IsRunning)
+                this.feedbackTXT.Text = string.Concat("Sound Length: ", this.mSoundStopwatch.Elapsed.ToString());
         }
 
         public override void ShutdownExtra(bool immediately)
         {
-            if (this.mCurrentSound != null)
-                this.StopSound(this.mCurrentSound.Handle);
-            // Wait for all sounds to finish
-            while (this.mSoundStartTimes.Count > 0)
-            {
-                System.Threading.Thread.Sleep(100);
-            }
-            //Audio.ShutdownWorld();
+            this.StopSound();
+            Audio.ShutdownWorld();
             this.updateTimer.Stop();
         }
 
@@ -230,8 +243,7 @@ namespace ChaosTools.AudioPlayer
 
         private void stopSound_Click(object sender, EventArgs e)
         {
-            if (this.mCurrentSound != null)
-                this.StopSound(this.mCurrentSound.Handle);
+            this.StopSound();
         }
 
         private void soundPropValue_TextChanged(object sender, EventArgs e)
@@ -249,13 +261,13 @@ namespace ChaosTools.AudioPlayer
 
         private void setSoundProp_Click(object sender, EventArgs e)
         {
-            if (this.mCurrentSound != null)
+            if (this.mCurrentSound != 0)
             {
                 uint property = (uint)this.soundPropCMB.SelectedItem;
                 float value;
                 if (float.TryParse(this.soundPropValueTXT.Text, out value))
                 {
-                    this.mCurrentSound.SetProperty(property, value);
+                    Audio.SetSoundProperty(this.mCurrentSound, property, value);
                 }
             }
         }
@@ -265,6 +277,7 @@ namespace ChaosTools.AudioPlayer
         private void pause_Click(object sender, EventArgs e)
         {
             this.PauseGameTime = true;
+            this.PauseSound(true);
             this.pauseBtn.Enabled = false;
             this.playBtn.Enabled = true;
         }
@@ -277,6 +290,7 @@ namespace ChaosTools.AudioPlayer
                 this.GameTimeMultiplier = speed;
             }
             this.PauseGameTime = false;
+            this.PauseSound(false);
             this.pauseBtn.Enabled = true;
             this.playBtn.Enabled = false;
         }
@@ -308,9 +322,11 @@ namespace ChaosTools.AudioPlayer
                     if (dialog.SelectedSong != null)
                     {
                         this.soundNameTXT.Text = dialog.SelectedSong.mSongKey;
-                        if (this.mCurrentSound != null)
-                            this.StopSound(this.mCurrentSound.Handle);
-                        this.StartSound();
+                        this.StopSound();
+                        if (this.mCurrentSound == 0)
+                            this.StartSound();
+                        else
+                            this.soundNameTXT.Enabled = false;
                     }
                 }
             }
