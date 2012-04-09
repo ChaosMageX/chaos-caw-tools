@@ -42,6 +42,7 @@
             this.printEffectNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printInstalledPackagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printLoadingTextsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printGameTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dumpMemorySummaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renderingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEffectStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,12 +50,7 @@
             this.showCircleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGameSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.invalidateRenderPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.getEffectStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setEffectStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.getGeneralStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setGeneralStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.getCameraVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setCameraVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showRenderSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startEffectBtn = new System.Windows.Forms.Button();
             this.effectNameTxt = new System.Windows.Forms.TextBox();
             this.stopEffectBtn = new System.Windows.Forms.Button();
@@ -68,7 +64,6 @@
             this.effectTransGRP = new System.Windows.Forms.GroupBox();
             this.effectTransHardRAD = new System.Windows.Forms.RadioButton();
             this.effectTransSoftRAD = new System.Windows.Forms.RadioButton();
-            this.printGameTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.gameSpeedGRP.SuspendLayout();
             this.lifeScaleGRP.SuspendLayout();
@@ -135,8 +130,8 @@
             this.printEffectNamesToolStripMenuItem,
             this.printInstalledPackagesToolStripMenuItem,
             this.printLoadingTextsToolStripMenuItem,
-            this.dumpMemorySummaryToolStripMenuItem,
-            this.printGameTipsToolStripMenuItem});
+            this.printGameTipsToolStripMenuItem,
+            this.dumpMemorySummaryToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -197,6 +192,13 @@
             this.printLoadingTextsToolStripMenuItem.Text = "Print Loading Texts";
             this.printLoadingTextsToolStripMenuItem.Click += new System.EventHandler(this.printLoadingTexts_Click);
             // 
+            // printGameTipsToolStripMenuItem
+            // 
+            this.printGameTipsToolStripMenuItem.Name = "printGameTipsToolStripMenuItem";
+            this.printGameTipsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.printGameTipsToolStripMenuItem.Text = "Print Game Tips";
+            this.printGameTipsToolStripMenuItem.Click += new System.EventHandler(this.printGameTips_Click);
+            // 
             // dumpMemorySummaryToolStripMenuItem
             // 
             this.dumpMemorySummaryToolStripMenuItem.Enabled = false;
@@ -213,12 +215,7 @@
             this.showCircleToolStripMenuItem,
             this.showGameSpeedToolStripMenuItem,
             this.invalidateRenderPanelToolStripMenuItem,
-            this.getEffectStatsToolStripMenuItem,
-            this.setEffectStatsToolStripMenuItem,
-            this.getGeneralStatsToolStripMenuItem,
-            this.setGeneralStatsToolStripMenuItem,
-            this.getCameraVectorsToolStripMenuItem,
-            this.setCameraVectorsToolStripMenuItem});
+            this.showRenderSettingsToolStripMenuItem});
             this.renderingToolStripMenuItem.Name = "renderingToolStripMenuItem";
             this.renderingToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.renderingToolStripMenuItem.Text = "Rendering";
@@ -226,79 +223,44 @@
             // showEffectStatsToolStripMenuItem
             // 
             this.showEffectStatsToolStripMenuItem.Name = "showEffectStatsToolStripMenuItem";
-            this.showEffectStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.showEffectStatsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.showEffectStatsToolStripMenuItem.Text = "Show Effect Stats";
             this.showEffectStatsToolStripMenuItem.Click += new System.EventHandler(this.showEffectStats_Click);
             // 
             // showGeneralStatsToolStripMenuItem
             // 
             this.showGeneralStatsToolStripMenuItem.Name = "showGeneralStatsToolStripMenuItem";
-            this.showGeneralStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.showGeneralStatsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.showGeneralStatsToolStripMenuItem.Text = "Show General Stats";
             this.showGeneralStatsToolStripMenuItem.Click += new System.EventHandler(this.showGeneralStats_Click);
             // 
             // showCircleToolStripMenuItem
             // 
             this.showCircleToolStripMenuItem.Name = "showCircleToolStripMenuItem";
-            this.showCircleToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.showCircleToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.showCircleToolStripMenuItem.Text = "Hide Circle";
             this.showCircleToolStripMenuItem.Click += new System.EventHandler(this.showCircle_Click);
             // 
             // showGameSpeedToolStripMenuItem
             // 
             this.showGameSpeedToolStripMenuItem.Name = "showGameSpeedToolStripMenuItem";
-            this.showGameSpeedToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.showGameSpeedToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.showGameSpeedToolStripMenuItem.Text = "Show Game Speed";
             this.showGameSpeedToolStripMenuItem.Click += new System.EventHandler(this.showGameSpeed_Click);
             // 
             // invalidateRenderPanelToolStripMenuItem
             // 
             this.invalidateRenderPanelToolStripMenuItem.Name = "invalidateRenderPanelToolStripMenuItem";
-            this.invalidateRenderPanelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.invalidateRenderPanelToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.invalidateRenderPanelToolStripMenuItem.Text = "Invalidate Render Panel";
             this.invalidateRenderPanelToolStripMenuItem.Click += new System.EventHandler(this.invalidateRenderPanel_Click);
             // 
-            // getEffectStatsToolStripMenuItem
+            // showRenderSettingsToolStripMenuItem
             // 
-            this.getEffectStatsToolStripMenuItem.Name = "getEffectStatsToolStripMenuItem";
-            this.getEffectStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.getEffectStatsToolStripMenuItem.Text = "Get Effect Stats Location";
-            this.getEffectStatsToolStripMenuItem.Click += new System.EventHandler(this.getEffectStats_Click);
-            // 
-            // setEffectStatsToolStripMenuItem
-            // 
-            this.setEffectStatsToolStripMenuItem.Name = "setEffectStatsToolStripMenuItem";
-            this.setEffectStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.setEffectStatsToolStripMenuItem.Text = "Set Effect Stats Location";
-            this.setEffectStatsToolStripMenuItem.Click += new System.EventHandler(this.setEffectStats_Click);
-            // 
-            // getGeneralStatsToolStripMenuItem
-            // 
-            this.getGeneralStatsToolStripMenuItem.Name = "getGeneralStatsToolStripMenuItem";
-            this.getGeneralStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.getGeneralStatsToolStripMenuItem.Text = "Get General Stats Location";
-            this.getGeneralStatsToolStripMenuItem.Click += new System.EventHandler(this.getGeneralStats_Click);
-            // 
-            // setGeneralStatsToolStripMenuItem
-            // 
-            this.setGeneralStatsToolStripMenuItem.Name = "setGeneralStatsToolStripMenuItem";
-            this.setGeneralStatsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.setGeneralStatsToolStripMenuItem.Text = "Set General Stats Location";
-            this.setGeneralStatsToolStripMenuItem.Click += new System.EventHandler(this.setGeneralStats_Click);
-            // 
-            // getCameraVectorsToolStripMenuItem
-            // 
-            this.getCameraVectorsToolStripMenuItem.Name = "getCameraVectorsToolStripMenuItem";
-            this.getCameraVectorsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.getCameraVectorsToolStripMenuItem.Text = "Get Camera Vectors";
-            this.getCameraVectorsToolStripMenuItem.Click += new System.EventHandler(this.getCameraVectors_Click);
-            // 
-            // setCameraVectorsToolStripMenuItem
-            // 
-            this.setCameraVectorsToolStripMenuItem.Name = "setCameraVectorsToolStripMenuItem";
-            this.setCameraVectorsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.setCameraVectorsToolStripMenuItem.Text = "Set Camera Vectors";
-            this.setCameraVectorsToolStripMenuItem.Click += new System.EventHandler(this.setCameraVectors_Click);
+            this.showRenderSettingsToolStripMenuItem.Name = "showRenderSettingsToolStripMenuItem";
+            this.showRenderSettingsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.showRenderSettingsToolStripMenuItem.Text = "Show Render Settings";
+            this.showRenderSettingsToolStripMenuItem.Click += new System.EventHandler(this.showRenderSettings_Click);
             // 
             // startEffectBtn
             // 
@@ -444,13 +406,6 @@
             this.effectTransSoftRAD.UseVisualStyleBackColor = true;
             this.effectTransSoftRAD.CheckedChanged += new System.EventHandler(this.effectTransRAD_CheckedChanged);
             // 
-            // printGameTipsToolStripMenuItem
-            // 
-            this.printGameTipsToolStripMenuItem.Name = "printGameTipsToolStripMenuItem";
-            this.printGameTipsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.printGameTipsToolStripMenuItem.Text = "Print Game Tips";
-            this.printGameTipsToolStripMenuItem.Click += new System.EventHandler(this.printGameTips_Click);
-            // 
             // EffectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,7 +455,6 @@
         private System.Windows.Forms.TextBox speedMultiplierTxt;
         private System.Windows.Forms.ToolStripMenuItem renderingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem invalidateRenderPanelToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setEffectStatsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showEffectStatsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEffectNamesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAppDataToolStripMenuItem;
@@ -510,19 +464,15 @@
         private System.Windows.Forms.TextBox lifeScaleTXT;
         private System.Windows.Forms.Button setLifeScaleBTN;
         private System.Windows.Forms.ToolStripMenuItem printInstalledPackagesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setGeneralStatsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setCameraVectorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showCircleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGameSpeedToolStripMenuItem;
         private System.Windows.Forms.GroupBox effectTransGRP;
         private System.Windows.Forms.RadioButton effectTransHardRAD;
         private System.Windows.Forms.RadioButton effectTransSoftRAD;
-        private System.Windows.Forms.ToolStripMenuItem getEffectStatsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem getGeneralStatsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem getCameraVectorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getEffectNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLoadTimesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printLoadingTextsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printGameTipsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showRenderSettingsToolStripMenuItem;
     }
 }

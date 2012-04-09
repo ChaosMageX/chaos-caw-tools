@@ -295,6 +295,7 @@ namespace ChaosTools.Sims3Engine
 
         private bool mPauseGameTime = false;
         private float mGameTimeMultiplier = 1f;
+        private bool mHideUI = false;
 
         /// <summary>
         /// Whether or not the elapsed game time is paused.
@@ -314,12 +315,50 @@ namespace ChaosTools.Sims3Engine
             get { return this.mGameTimeMultiplier; }
             set { if (value != 0) this.mGameTimeMultiplier = Math.Abs(value); }
         }
+
+        /// <summary>
+        /// Whether or not the native game UI is drawn.
+        /// </summary>
+        public bool HideUI
+        {
+            get { return this.mHideUI; }
+            set { this.mHideUI = value; }
+        }
         
         private void RenderPanel_Resize(object sender, EventArgs e)
         {
             System.Drawing.Size clientSize = this.mRenderingPanel.ClientSize;
             this.mScene.MainCamera.AspectRatio = (float)clientSize.Width / (float)clientSize.Height;
             this.mScene.MainCamera.UpdateMatrices();
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SendMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
+        [System.Runtime.InteropServices.DllImport("Sims3Common.dll")]
+        private static extern IntPtr WorldWrap_GetCanvasHWND();
+
+        private const int WM_ACTIVATE = 0x0006;
+        private const int WM_ACTIVATEAPP = 0x001c;
+
+        /// <summary>
+        /// Processes Windows messages, 
+        /// and forwards the WM_ACTIVATE and WM_ACTIVATEAPP messages
+        /// to the Game Engine's rendering canvas.
+        /// </summary>
+        /// <param name="m">
+        /// The Windows <see cref="T:System.Windows.Forms.Message"/> to process.
+        /// </param>
+        protected override void WndProc(ref Message m)
+        {
+            bool flag = false;
+            if (this.mGraphicsInitialized && (m.Msg == WM_ACTIVATE || m.Msg == WM_ACTIVATEAPP))
+            {
+                flag = SendMessage(WorldWrap_GetCanvasHWND(), (uint)m.Msg, m.WParam, m.LParam);
+            }
+            if (!flag)
+            {
+                base.WndProc(ref m);
+            }
         }
 
         /// <summary>
@@ -354,8 +393,11 @@ namespace ChaosTools.Sims3Engine
                     this.mScene.BeginFrame();
                     this.mScene.DrawScene();
                     this.DrawExtra(engineTime);
-                    GfxDevice.RectInt viewport = GfxDevice.GetViewport();
-                    App.RenderUI(viewport.left, viewport.top, viewport.right, viewport.bottom);
+                    if (!this.mHideUI)
+                    {
+                        GfxDevice.RectInt viewport = GfxDevice.GetViewport();
+                        App.RenderUI(viewport.left, viewport.top, viewport.right, viewport.bottom);
+                    }
                     GfxDevice.EndScene();
                 }
                 GfxDevice.Present();

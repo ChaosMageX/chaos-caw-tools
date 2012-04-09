@@ -61,6 +61,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenderSettingsDialog.Designer.cs">
+      <DependentUpon>RenderSettingsDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="EffectForm.resx">
       <DependentUpon>EffectForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -74,6 +80,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RenderSettingsDialog.resx">
+      <DependentUpon>RenderSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

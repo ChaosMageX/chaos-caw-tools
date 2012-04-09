@@ -21,6 +21,9 @@ namespace ChaosTools.EffectPlayer
         {
             InitializeComponent();
             this.RenderingPanel = this.renderPanelEx1;
+#if !DEBUG
+            this.openPackageToolStripMenuItem.Enabled = false;
+#endif
         }
 
         private void OnEffectFinished(object sender, EventArgs e)
@@ -74,7 +77,7 @@ namespace ChaosTools.EffectPlayer
                 StatsManager.DrawStats(this.mGeneralStatsX, this.mGeneralStatsY);
             if (this.mGameSpeedVisible)
             {
-                float textY = this.renderPanelEx1.Height - 12f;
+                float textY = this.renderPanelEx1.Height - 14f;
                 App.DrawText(string.Concat("Game Speed: ",
                     this.PauseGameTime ? "Paused" : this.GameTimeMultiplier.ToString()),
                     2f, textY);
@@ -126,9 +129,9 @@ namespace ChaosTools.EffectPlayer
             }
         }
 
+        #region File Menu Handlers
         private const string sPackageFilter = "Sims 3 Package (*.package)|*.package";
 
-        #region File Menu Handlers
         private uint mCurrentPackage = 0;
         //private ulong mScenePackage = 0;
         private IntPtr[] mLoadedResources = null;
@@ -344,7 +347,35 @@ namespace ChaosTools.EffectPlayer
                         }
                     }
                 }
-                
+            }
+        }
+
+        private void printGameTips_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                dialog.Title = "Print Localized Game Tip Messages to Text File";
+                dialog.Filter = sTextFileFilter;
+                dialog.AddExtension = true;
+                DialogResult result = dialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    this.LoadGameTips();
+                    using (StreamWriter writer = new StreamWriter(dialog.FileName))
+                    {
+                        string[] tips;
+                        foreach (KeyValuePair<Sims3.SimIFace.ProductVersion, string[]> gameTip in this.mGameTips)
+                        {
+                            writer.WriteLine(string.Concat(gameTip.Key.ToString(), ":"));
+                            tips = gameTip.Value;
+                            for (int i = 0; i < tips.Length; i++)
+                            {
+                                writer.WriteLine(tips[i]);
+                            }
+                            writer.WriteLine();
+                        }
+                    }
+                }
             }
         }
 
@@ -435,116 +466,25 @@ namespace ChaosTools.EffectPlayer
             this.renderPanelEx1.Invalidate();
         }
 
-        private void getEffectStats_Click(object sender, EventArgs e)
+        private void showRenderSettings_Click(object sender, EventArgs e)
         {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.mEffectStatsX);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mEffectStatsY);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mEffectStatsIncr);
-            this.effectNameTxt.Text = builder.ToString();
-        }
-
-        private void setEffectStats_Click(object sender, EventArgs e)
-        {
-            string[] numbers = this.effectNameTxt.Text.Split(new char[] { kNumberSeparator }, 
-                StringSplitOptions.RemoveEmptyEntries);
-            if (numbers.Length >= 3)
+            using (RenderSettingsDialog dialog = new RenderSettingsDialog(
+                this.mEffectStatsX, this.mEffectStatsY, this.mEffectStatsIncr,
+                this.mGeneralStatsX, this.mGeneralStatsY,
+                this.mCameraEye, this.mCameraUp, this.mCameraTarget))
             {
-                float temp;
-                if (float.TryParse(numbers[0], out temp))
-                    this.mEffectStatsX = temp;
-                if (float.TryParse(numbers[1], out temp))
-                    this.mEffectStatsY = temp;
-                if (float.TryParse(numbers[2], out temp))
-                    this.mEffectStatsIncr = temp;
-            }
-        }
-
-        private void getGeneralStats_Click(object sender, EventArgs e)
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.mGeneralStatsX);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mGeneralStatsY);
-            this.effectNameTxt.Text = builder.ToString();
-        }
-
-        private void setGeneralStats_Click(object sender, EventArgs e)
-        {
-            string[] numbers = this.effectNameTxt.Text.Split(new char[] { kNumberSeparator },
-                StringSplitOptions.RemoveEmptyEntries);
-            if (numbers.Length >= 2)
-            {
-                float temp;
-                if (float.TryParse(numbers[0], out temp))
-                    this.mGeneralStatsX = temp;
-                if (float.TryParse(numbers[1], out temp))
-                    this.mGeneralStatsY = temp;
-            }
-        }
-
-        private void getCameraVectors_Click(object sender, EventArgs e)
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.mCameraEye.x);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraEye.y);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraEye.z);
-            builder.Append(kNumberSeparator);
-
-            builder.Append(this.mCameraUp.x);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraUp.y);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraUp.z);
-            builder.Append(kNumberSeparator);
-
-            builder.Append(this.mCameraTarget.x);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraTarget.y);
-            builder.Append(kNumberSeparator);
-            builder.Append(this.mCameraTarget.z);
-            this.effectNameTxt.Text = builder.ToString();
-        }
-
-        private void setCameraVectors_Click(object sender, EventArgs e)
-        {
-            string[] numbers = this.effectNameTxt.Text.Split(new char[] { kNumberSeparator },
-                StringSplitOptions.RemoveEmptyEntries);
-            if (numbers.Length >= 3)
-            {
-                this.mCameraEye = new Sims3.Math.Vector3(2.5f, 2.5f, 2.5f);
-                this.mCameraUp = new Sims3.Math.Vector3(0f, 1f, 0f);
-                this.mCameraTarget = new Sims3.Math.Vector3(0f, 0f, 0f);
-                float temp;
-                if (float.TryParse(numbers[0], out temp))
-                    this.mCameraEye.x = temp;
-                if (float.TryParse(numbers[1], out temp))
-                    this.mCameraEye.y = temp;
-                if (float.TryParse(numbers[2], out temp))
-                    this.mCameraEye.z = temp;
-                if (numbers.Length >= 6)
+                DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
                 {
-                    if (float.TryParse(numbers[3], out temp))
-                        this.mCameraUp.x = temp;
-                    if (float.TryParse(numbers[4], out temp))
-                        this.mCameraUp.y = temp;
-                    if (float.TryParse(numbers[5], out temp))
-                        this.mCameraUp.z = temp;
-                    if (numbers.Length >= 9)
-                    {
-                        if (float.TryParse(numbers[6], out temp))
-                            this.mCameraTarget.x = temp;
-                        if (float.TryParse(numbers[7], out temp))
-                            this.mCameraTarget.y = temp;
-                        if (float.TryParse(numbers[8], out temp))
-                            this.mCameraTarget.z = temp;
-                    }
+                    dialog.GetEffectStatsLocation(out this.mEffectStatsX,
+                        out this.mEffectStatsY, out this.mEffectStatsIncr);
+                    dialog.GetGeneralStatsLocation(out this.mGeneralStatsX,
+                        out this.mGeneralStatsY);
+                    this.mCameraEye = dialog.CameraEyePosition;
+                    this.mCameraUp = dialog.CameraUpDirection;
+                    this.mCameraTarget = dialog.CameraTargetPosition;
+                    this.Scene.MainCamera.LookAt(ref this.mCameraEye, ref this.mCameraUp, ref this.mCameraTarget);
                 }
-                this.Scene.MainCamera.LookAt(ref this.mCameraEye, ref this.mCameraUp, ref this.mCameraTarget);
             }
         }
         #endregion
@@ -808,10 +748,5 @@ namespace ChaosTools.EffectPlayer
                 this.mEffectTransition = Sims3.SimIFace.VisualEffect.TransitionType.HardTransition;
         }
         #endregion
-
-        private void printGameTips_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

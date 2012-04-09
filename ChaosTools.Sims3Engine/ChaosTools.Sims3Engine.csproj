@@ -55,6 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AV\SoundWithHandle.cs" />
+    <Compile Include="AV\VideoSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AV\VideoSettingsControl.Designer.cs">
+      <DependentUpon>VideoSettingsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="BasicEngine.cs" />
     <Compile Include="CacheManager.cs" />
     <Compile Include="CameraTuning.cs" />
@@ -73,6 +79,11 @@
     <Compile Include="SimpleBox.cs" />
     <Compile Include="TagValue.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AV\VideoSettingsControl.resx">
+      <DependentUpon>VideoSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
